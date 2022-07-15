@@ -15,7 +15,7 @@ def getinfo_web(request):
         return JsonResponse({
                 "result": "not authenticated"
             })
-    player = Player.objects.all()[0]
+    player = Player.objects.get(user=user)
     return JsonResponse({
         'result': "success",
         'username': player.user.username,

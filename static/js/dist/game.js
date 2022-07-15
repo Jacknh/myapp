@@ -10,7 +10,7 @@ class AcGameMenu {
                     <div class="ac-game-menu-field-item ac-game-menu-field-item-multi-mode">
                         多人模式
                     </div>
-                    <div class="ac-game-menu-field-item ac-game-menu-field-item-single-settings">
+                    <div class="ac-game-menu-field-item ac-game-menu-field-item-settings">
                         设置
                     </div>
                 </div>
@@ -40,7 +40,7 @@ class AcGameMenu {
         });
 
         this.$settings.click(() => {
-            console.log("settings click");
+            this.root.settings.logout_on_remote();
         })
 
     }
@@ -543,6 +543,7 @@ class Settings {
         this.$register_login = this.$register.find(".ac-game-settings-option");
 
         this.$register.hide();
+        this.$acwing_login = this.$settings.find('.ac-game-settings-acwing img')
 
         this.root.$ac_game.append(this.$settings);
 
@@ -557,6 +558,9 @@ class Settings {
     add_listening_events() {
         this.add_listening_events_login();
         this.add_listening_events_register();
+        this.$acwing_login.click(() => {
+            this.acwing_login()
+        })
     }
 
     add_listening_events_login() {
@@ -579,6 +583,19 @@ class Settings {
             outer.register_on_remote();
         });
     }
+
+    acwing_login() {
+        $.ajax({
+            url: "https://app2562.acapp.acwing.com.cn/settings/acwing/web/apply_code/",
+            type: "GET",
+            success: function(resp) {
+                if (resp.result === "success") {
+                    window.location.replace(resp.apply_code_url);
+                }
+            }
+        });
+    }
+
 
     login_on_remote() {  // 在远程服务器上登录
         let outer = this;

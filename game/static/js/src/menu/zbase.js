@@ -10,7 +10,7 @@ class AcGameMenu {
                     <div class="ac-game-menu-field-item ac-game-menu-field-item-multi-mode">
                         多人模式
                     </div>
-                    <div class="ac-game-menu-field-item ac-game-menu-field-item-single-settings">
+                    <div class="ac-game-menu-field-item ac-game-menu-field-item-settings">
                         设置
                     </div>
                 </div>
@@ -40,7 +40,7 @@ class AcGameMenu {
         });
 
         this.$settings.click(() => {
-            console.log("settings click");
+            this.root.settings.logout_on_remote();
         })
 
     }
