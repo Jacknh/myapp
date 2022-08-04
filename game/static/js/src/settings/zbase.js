@@ -107,8 +107,12 @@ class Settings {
     }
 
     start() {
-        this.getinfo();
-        this.add_listening_events();
+        if (this.platform == "ACAPP") {
+            this.getinfo_acapp()
+        } else {
+            this.getinfo_web();
+            this.add_listening_events();
+        }
     }
 
     add_listening_events() {
@@ -142,7 +146,7 @@ class Settings {
 
     acwing_login() {
         $.ajax({
-            url: "https://app2562.acapp.acwing.com.cn/settings/acwing/web/apply_code/",
+            url: "https://ermao.site/settings/acwing/web/apply_code/",
             type: "GET",
             success: function(resp) {
                 if (resp.result === "success") {
@@ -160,7 +164,7 @@ class Settings {
         this.$login_error_message.empty();
 
         $.ajax({
-            url: "https://app2562.acapp.acwing.com.cn/settings/login/",
+            url: "https://ermao.site/settings/login/",
             type: "GET",
             data: {
                 username: username,
@@ -185,7 +189,7 @@ class Settings {
         this.$register_error_message.empty();
 
         $.ajax({
-            url: "https://app2562.acapp.acwing.com.cn/settings/register/",
+            url: "https://ermao.site/settings/register/",
             type: "GET",
             data: {
                 username: username,
@@ -207,7 +211,7 @@ class Settings {
         if (this.platform === "ACAPP") return false;
 
         $.ajax({
-            url: "https://app2562.acapp.acwing.com.cn/settings/logout/",
+            url: "https://ermao.site/settings/logout/",
             type: "GET",
             success: function(resp) {
                 console.log(resp);
@@ -228,11 +232,36 @@ class Settings {
         this.$login.show();
     }
 
-    getinfo() {
+    acapp_login(appid, redirect_uri, scope, state) {
+        let outer = this;
+
+        this.root.AcWingOS.api.oauth2.authorize(appid, redirect_uri, scope, state, function(resp) {
+            if (resp.result === "success") {
+                outer.username = resp.username;
+                outer.photo = resp.photo;
+                outer.hide();
+                outer.root.menu.show();
+            }
+        });
+
+    }
+    getinfo_acapp() {
+        let _this = this;
+        $.ajax({
+            url: "https://ermao.site/settings/acwing/acapp/apply_code/",
+            type: "GET",
+            success: function(resp) {
+                if (resp.result == "success") {
+                    _this.acapp_login(resp.appid, resp.redirect_uri, resp.scope, resp.state)
+                }
+            }
+        })
+    }
+    getinfo_web() {
         let outer = this;
 
         $.ajax({
-            url: "https://app2562.acapp.acwing.com.cn/settings/getinfo/",
+            url: "https://ermao.site/settings/getinfo/",
             type: "GET",
             data: {
                 platform: outer.platform,
